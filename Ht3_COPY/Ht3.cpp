@@ -26,6 +26,10 @@ int* initArray(int capacity)
 	return result;
 }
 
+void deleteArray(int* arr)
+{
+	delete[](arr - 2);
+}
 void function_3(int* arr, int size) { // Вывести массив
 	*(arr - 1) = size;
 	for (int i = -2; i < size; i++)
@@ -81,43 +85,38 @@ void function_6(int*& arr, int& size, int* addArr, int addSize) { //Объединение 
 	if (addSize < size) {
 		for (i = 0; i < size + addSize; i++) {
 			if (i < 2 * addSize) {
-				if (i % 2 == 0) { *(arr + i) = *(arr_copy+ i/2); cout << *(arr + i)  << "  "; }
+				if (i % 2 == 0) {
+					*(arr + i) = *(arr_copy+ i/2);
+				}
 				else {
 					j++;
 					*(arr + i) = *(addArr + j);
-					cout << *(arr + i) << "  ";
 				}
 				t = i / 2;
 			}
 			else {
 				t++;
 				*(arr + i) = *(arr_copy + t);
-				cout << *(arr + i) << "  ";
 			}
 		}
-		system("pause");
 	}
 	if (addSize > size) {
 		for (i = 0; i < size + addSize; i++) {
 			if (i < 2 * size - 1) {
 				if (i % 2 == 0) {
 					*(arr + i) = *(arr_copy + i / 2);
-					cout << *(arr + i) << "  ";
 				}
 				else {
 					j++;
 					t = i / 2;
 					*(arr + i) = *(addArr + j);
-					cout << *(arr + i) << "  ";
 				}
 			}
 			else {
 				t++;
 				*(arr + i) = *(addArr + t);
-				cout << *(arr + i) << "  ";
 			}
 		}
-		system("pause");
 	}
 	size += addSize;
 }
@@ -151,19 +150,15 @@ int function_8(int*& arr, int& size, int startIndex, int count) { // Удаление не
 	}
 }
 
-/*int function_9(int* arr, int size, int* B, int size_B) { // Удаление нескольких подряд идущих элементов массива
+int function_9(int* arr, int size, int* B, int size_B) { // Удаление нескольких подряд идущих элементов массива
 	for (int j = 0; j < size_B; j++) {
 		for (int i = 0; i < size; i++) {
-			if (arr[i] == B[j]) {
+			if (*(arr + i) == *(B + j)) {
 				int temp = i;
-				cout << i << " " << arr[i] << endl;
-
-				cout << "arr[i + 1]=  " << arr[i + 1] << endl;
-				cout << "B[j + 1]=  " << B[j + 1] << endl;
-				if (arr[i + 1] == B[j + 1]) {
-					while (arr[i + 1] = B[j + 1]) {
+				cout << i << " " << *(arr + i) << endl;
+				if (*(arr + i + 1) == *(B + j + 1)) {
+					while (*(arr + i + 1) = *(B + j + 1)) {
 						if (i - temp + 1 == size_B) { return temp; }
-						cout << "i - temp + 1" << "=  " << i - temp + 1 << "  " << arr[i] << endl;
 						i++; j++;
 					}
 				}
@@ -171,9 +166,8 @@ int function_8(int*& arr, int& size, int startIndex, int count) { // Удаление не
 			}
 		}
 	}
-	system("pause");
 	return -1;
-}*/
+}
 
 void check(int*& A, int& n, int x) {
 	if (x == 1) {
@@ -215,16 +209,10 @@ void check(int*& A, int& n, int x) {
 			if (a != -1000) {
 				i++;
 				addArr[i] = a;
-				//cout << addArr[i] << endl;
-				//cout << i << endl;
 			}
 			else break;
 		}
-		cout << "Успешно!" << endl;
 		int addSize = i + 1;
-		/*for (i = 0; i < addSize; i++) {
-			cout << addArr[i] << "  ";
-		}*/
 		function_5(A, n, addArr, addSize);
 		delete[] addArr;
 		system("pause");
@@ -268,7 +256,7 @@ void check(int*& A, int& n, int x) {
 		cin >> count;
 		cout << function_8(A, n, startIndex, count) << endl;
 	}
-	/*if (x == 9) {
+	if (x == 9) {
 		int* B = new int[N] {0};
 		int size_B = 0;
 		int i = -1;
@@ -286,7 +274,7 @@ void check(int*& A, int& n, int x) {
 		size_B = i + 1;
 		cout << function_9(A, n, B, size_B) << endl;
 		system("pause");
-	}*/
+	}
 }
 
 int main()
@@ -302,6 +290,6 @@ int main()
 		check(A, n, x);
 	}
 
-	delete[] A;
+	deleteArray(A);
 	return 0;
 }
