@@ -30,8 +30,8 @@ void deleteArray(int* arr)
 {
 	delete[](arr - 2);
 }
-void function_3(int* arr, int size) { // Вывести массив
-	*(arr - 1) = size;
+void function_3(int* arr) { // Вывести массив
+	int size = *(arr - 1);
 	for (int i = -2; i < size; i++)
 	{
 		cout << *(arr + i) << "  ";
@@ -39,8 +39,9 @@ void function_3(int* arr, int size) { // Вывести массив
 	system("pause");
 }
 
-void function_1(int*& arr, int& size, int M) { // Добавить несколько эл-ов с клавиатуры
+void function_1(int*& arr, int M) { // Добавить несколько эл-ов с клавиатуры
 	int a = 0;
+	int size = *(arr - 1);
 	for (int i = 0; i < M; i++) {
 		cout << "Введите число, которое необходимо добавить" << endl;
 		cin >> a;
@@ -48,7 +49,8 @@ void function_1(int*& arr, int& size, int M) { // Добавить несколько эл-ов с кла
 		size++;
 	}
 }
-void function_2(int*& arr, int& size, int numb_rand, int a, int b) { // Добавить рандомные числа
+void function_2(int*& arr, int numb_rand, int a, int b) { // Добавить рандомные числа
+	int size = *(arr - 1);
 	int new_size = size + numb_rand;
 	while (size < new_size) {
 		*(arr + size) = rand() % (b - a + 1) + a;
@@ -56,16 +58,20 @@ void function_2(int*& arr, int& size, int numb_rand, int a, int b) { // Добавить
 	}
 }
 
-int function_4(int* arr, int size, int element) { // Поиск индекса элемента
+int function_4(int* arr, int element, int start = 0) { // Поиск индекса элемента
+	int size = *(arr - 1);
 	for (int i = 0; i < size; i++) {
 		if (*(arr + i) == element) { return i; }
 	}
 	return -1;
 }
 
-void function_5(int*& arr, int& size, int* addArr, int addSize) { //Добавление массива к массиву
+
+void function_5(int*& arr, int* addArr) { //Добавление массива к массиву
 	int i = 0;
 	int j = 0;
+	int addSize = sizeof(addArr);
+	int size = *(arr - 1);
 	for (i = size; i < size + addSize; i++) {
 		*(arr + i) = *(addArr+j);
 		j++;
@@ -73,10 +79,12 @@ void function_5(int*& arr, int& size, int* addArr, int addSize) { //Добавление м
 	size = size + addSize;
 }
 
-void function_6(int*& arr, int& size, int* addArr, int addSize) { //Объединение массивов
+void function_6(int*& arr, int* addArr) { //Объединение массивов
 	int i = 0;
 	int j = -1;
 	int t = 0;
+	int addSize = sizeof(addArr);
+	int size = *(arr - 1);
 	int* arr_copy = new int[N] {0};
 	for (i = 0; i < size; i++) {
 		*(arr_copy + i) = *(arr + i);
@@ -121,8 +129,9 @@ void function_6(int*& arr, int& size, int* addArr, int addSize) { //Объединение 
 	size += addSize;
 }
 
-void function_7(int*& arr, int& size, int element, int index) { // Вставка элемента в массив
+void function_7(int*& arr, int element, int index) { // Вставка элемента в массив
 	int temp = 0;
+	int size = *(arr - 1);
 	int* arr_copy = new int[N] {0};
 	for (int i = 0; i < size; i++) {
 		*(arr_copy + i) = *(arr + i);
@@ -135,7 +144,8 @@ void function_7(int*& arr, int& size, int element, int index) { // Вставка элеме
 	}
 }
 
-int function_8(int*& arr, int& size, int startIndex, int count) { // Удаление нескольких подряд идущих элементов массива
+int function_8(int*& arr, int startIndex, int count) { // Удаление нескольких подряд идущих элементов массива
+	int size = *(arr - 1);
 	if (startIndex + count > size) { return -1; }
 	else {
 		int* arr_copy = new int[N] {0};
@@ -150,7 +160,9 @@ int function_8(int*& arr, int& size, int startIndex, int count) { // Удаление не
 	}
 }
 
-int function_9(int* arr, int size, int* B, int size_B) { // Удаление нескольких подряд идущих элементов массива
+int function_9(int* arr, int* B) { // Удаление нескольких подряд идущих элементов массива
+	int size_B = sizeof(B);
+	int size = *(arr - 1);
 	for (int j = 0; j < size_B; j++) {
 		for (int i = 0; i < size; i++) {
 			if (*(arr + i) == *(B + j)) {
@@ -169,13 +181,13 @@ int function_9(int* arr, int size, int* B, int size_B) { // Удаление нескольких 
 	return -1;
 }
 
-void check(int*& A, int& n, int x) {
+void check(int*& A, int x) {
 	if (x == 1) {
 		int a = 0;
 		int M = 0;
 		cout << "Сколько чисел Вы хотите добавить?" << endl;
 		cin >> M;
-		function_1(A, n, M);
+		function_1(A, M);
 	}
 	if (x == 2) {
 		int c = 0;
@@ -185,17 +197,18 @@ void check(int*& A, int& n, int x) {
 		int b = 0;
 		cout << "В каком промежутке необходимо рандомить числа?" << endl;
 		cin >> a >> b;
-		function_2(A, n, c, a, b);
+		function_2(A, c, a, b);
 	}
 	if (x == 3) {
 		cout << "Массив:  ";
-		function_3(A, n);
+		function_3(A);
 	}
 	if (x == 4) {
 		int element = 0;
+		int start = 0;
 		cout << "Индекс какого элемента Вы хотите узнать?" << endl;
 		cin >> element;
-		cout << function_4(A, n, element) << endl;
+		cout << function_4(A, element, start) << endl;
 		system("pause");
 	}
 	if (x == 5) {
@@ -213,7 +226,7 @@ void check(int*& A, int& n, int x) {
 			else break;
 		}
 		int addSize = i + 1;
-		function_5(A, n, addArr, addSize);
+		function_5(A, addArr);
 		delete[] addArr;
 		system("pause");
 	}
@@ -236,7 +249,7 @@ void check(int*& A, int& n, int x) {
 			cout << addArr[i] << "  ";
 		}
 		system("pause");
-		function_6(A, n, addArr, addSize);
+		function_6(A, addArr);
 	}
 	if (x == 7) {
 		int  element = 0;
@@ -245,7 +258,7 @@ void check(int*& A, int& n, int x) {
 		cin >> element;
 		cout << "Какой индекс должен иметь элемент?" << endl;
 		cin >> index;
-		function_7(A, n, element, index);
+		function_7(A, element, index);
 	}
 	if (x == 8) {
 		int startIndex = 0;
@@ -254,7 +267,7 @@ void check(int*& A, int& n, int x) {
 		cin >> startIndex;
 		cout << "Сколько элементов надо удалить?" << endl;
 		cin >> count;
-		cout << function_8(A, n, startIndex, count) << endl;
+		cout << function_8(A, startIndex, count) << endl;
 	}
 	if (x == 9) {
 		int* B = new int[N] {0};
@@ -272,7 +285,7 @@ void check(int*& A, int& n, int x) {
 			else break;
 		}
 		size_B = i + 1;
-		cout << function_9(A, n, B, size_B) << endl;
+		cout << function_9(A, B) << endl;
 		system("pause");
 	}
 }
@@ -287,7 +300,8 @@ int main()
 		system("cls");
 		meny();
 		cin >> x;
-		check(A, n, x);
+		*(A - 1) = sizeof(A);
+		check(A, x);
 	}
 
 	deleteArray(A);
