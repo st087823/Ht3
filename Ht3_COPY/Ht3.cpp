@@ -1,309 +1,136 @@
-#include <iostream>
-#include <math.h>
-#include <conio.h> // для getch
-#include <cstdlib> // system("pause");
-#define N 30
+#include<iostream>
+#include<string>
+#include<clocale>
+#include <iomanip>
+#include <cmath>
 using namespace std;
 
-void meny() {
-	cout << "0 - Выйти из программы" << endl;
-	cout << "1 - Ввести несколько эл-ов с клавиатуры" << endl;
-	cout << "2 - Добавить в массив n случайных чисел в промежутке от a до b" << endl;
-	cout << "3 - Вывести массив на экран" << endl;
-	cout << "4 - Поиск индекса элемента" << endl;
-	cout << "5 - Добавление массив к массиву" << endl;
-	cout << "6 - Объединение массивов" << endl;
-	cout << "7 - Вставка элемента в массив" << endl;
-	cout << "8 - Удаление нескольких подряд идущих элементов массива" << endl;
-	cout << "9 - Поиск подпоследовательности" << endl;
+
+bool isDigit(char symbol)
+{
+	return symbol >= '0' && symbol <= '9';
 }
 
-int* initArray(int capacity)
+int stringToDouble(string& str)
 {
-	int* result = new int[capacity + 2]{ 0 };
-	result += 2;
-	*(result - 2) = capacity;
-	return result;
-}
-
-void deleteArray(int* arr)
-{
-	delete[](arr - 2);
-}
-void function_3(int* arr) { // Вывести массив
-	int size = *(arr - 1);
-	for (int i = -2; i < size; i++)
+	double number = 0;
+	int signum = 1;
+	if (str[0] == '-')
 	{
-		cout << *(arr + i) << "  ";
+		str = str.substr(1);
+		signum = -1;
 	}
-	system("pause");
-}
-
-void function_1(int*& arr, int M) { // Добавить несколько эл-ов с клавиатуры
-	int a = 0;
-	int size = *(arr - 1);
-	for (int i = 0; i < M; i++) {
-		cout << "Введите число, которое необходимо добавить" << endl;
-		cin >> a;
-		*(arr + size) = a;
-		size++;
+	while (isDigit(str[0]))
+	{
+		number = 10 * number + str[0] - '0';
+		str = str.substr(1);
 	}
-}
-void function_2(int*& arr, int numb_rand, int a, int b) { // Добавить рандомные числа
-	int size = *(arr - 1);
-	int new_size = size + numb_rand;
-	while (size < new_size) {
-		*(arr + size) = rand() % (b - a + 1) + a;
-		size++;
+	if (str[0] != '.' && !empty(str))
+	{
+		return -2;
 	}
-}
-
-int function_4(int* arr, int element, int start = 0) { // Поиск индекса элемента
-	int size = *(arr - 1);
-	for (int i = 0; i < size; i++) {
-		if (*(arr + i) == element) { return i; }
-	}
-	return -1;
-}
-
-
-void function_5(int*& arr, int* addArr) { //Добавление массива к массиву
-	int i = 0;
-	int j = 0;
-	int addSize = sizeof(addArr);
-	int size = *(arr - 1);
-	for (i = size; i < size + addSize; i++) {
-		*(arr + i) = *(addArr+j);
-		j++;
-	}
-	size = size + addSize;
-}
-
-void function_6(int*& arr, int* addArr) { //Объединение массивов
-	int i = 0;
-	int j = -1;
-	int t = 0;
-	int addSize = sizeof(addArr);
-	int size = *(arr - 1);
-	int* arr_copy = new int[N] {0};
-	for (i = 0; i < size; i++) {
-		*(arr_copy + i) = *(arr + i);
-	}
-
-	if (addSize < size) {
-		for (i = 0; i < size + addSize; i++) {
-			if (i < 2 * addSize) {
-				if (i % 2 == 0) {
-					*(arr + i) = *(arr_copy+ i/2);
-				}
-				else {
-					j++;
-					*(arr + i) = *(addArr + j);
-				}
-				t = i / 2;
-			}
-			else {
-				t++;
-				*(arr + i) = *(arr_copy + t);
-			}
+	if (str[0] == '.')
+	{
+		str = str.substr(1);
+		double remain = 0;
+		while (isDigit(str[0]))
+		{
+			remain = 10 * remain + str[0] - '0';
+			str = str.substr(1);
 		}
-	}
-	if (addSize > size) {
-		for (i = 0; i < size + addSize; i++) {
-			if (i < 2 * size - 1) {
-				if (i % 2 == 0) {
-					*(arr + i) = *(arr_copy + i / 2);
-				}
-				else {
-					j++;
-					t = i / 2;
-					*(arr + i) = *(addArr + j);
-				}
-			}
-			else {
-				t++;
-				*(arr + i) = *(addArr + t);
-			}
+		if (!empty(str))
+		{
+			return -2;
 		}
+		while (remain > 1)
+		{
+			remain /= 10;
+		}
+		number += remain;
 	}
-	size += addSize;
+	number *= signum;
+	//cout << "number *= signum;" << number;
+	return number;
 }
 
-void function_7(int*& arr, int element, int index) { // Вставка элемента в массив
-	int temp = 0;
-	int size = *(arr - 1);
-	int* arr_copy = new int[N] {0};
-	for (int i = 0; i < size; i++) {
-		*(arr_copy + i) = *(arr + i);
+int stringToInt(string& str)
+{
+	int number = 0;
+	int signum = 1;
+	if (str[0] == '-')
+	{
+		str = str.substr(1);
+		signum = -1;
 	}
-	temp = *(arr + index);
-	*(arr+index) = element;
-	size++;
-	for (int i = index + 1; i < size; i++) {
-		*(arr + i) = *(arr_copy + i - 1);
+
+	while (isDigit(str[0]))
+	{
+		number = 10 * number + str[0] - '0';
+		str = str.substr(1);
 	}
+	number *= signum;
+	return number;
 }
 
-int function_8(int*& arr, int startIndex, int count) { // Удаление нескольких подряд идущих элементов массива
-	int size = *(arr - 1);
-	if (startIndex + count > size) { return -1; }
-	else {
-		int* arr_copy = new int[N] {0};
-		for (int i = 0; i < size; i++) {
-			*(arr_copy + i) = *(arr + i);
-		}
-		for (int i = startIndex; i < size - count; i++) {
-			*(arr + i) = *(arr_copy + i + count);
-		}
-		size = size - count;
+int Valid_x(int x)
+{
+	if (x <= 1 && x >= -1)
+	{
 		return 0;
 	}
+	cout << "Ошибка x" << endl;
+	return 1;
+}
+int Valid_n(int n)
+{
+	if (0 < n < 10)	return 0;
+	cout << "Ошибка n" << endl;
+	return 1;
 }
 
-int function_9(int* arr, int* B) { // Удаление нескольких подряд идущих элементов массива
-	int size_B = sizeof(B);
-	int size = *(arr - 1);
-	for (int j = 0; j < size_B; j++) {
-		for (int i = 0; i < size; i++) {
-			if (*(arr + i) == *(B + j)) {
-				int temp = i;
-				cout << i << " " << *(arr + i) << endl;
-				if (*(arr + i + 1) == *(B + j + 1)) {
-					while (*(arr + i + 1) = *(B + j + 1)) {
-						if (i - temp + 1 == size_B) { return temp; }
-						i++; j++;
-					}
-				}
-				i = temp;
-			}
-		}
-	}
-	return -1;
+long double fact(int N)
+{
+	if (N < 0) return 0;
+	if (N == 0) return 1;
+	else return N * fact(N - 1);
 }
 
-void check(int*& A, int x) {
-	if (x == 1) {
-		int a = 0;
-		int M = 0;
-		cout << "Сколько чисел Вы хотите добавить?" << endl;
-		cin >> M;
-		function_1(A, M);
+int ch(double x, int n) {
+	double result = 0;
+	for (int i = 0; i <= n; i++)
+	{
+		double factorial = fact(2 * i);
+		x = pow(x, (2 * i));
+		result += x / factorial;
+
 	}
-	if (x == 2) {
-		int c = 0;
-		cout << "Какое кол-во случайных чисел Вы хотите добавить?" << endl;
-		cin >> c;
-		int a = 0;
-		int b = 0;
-		cout << "В каком промежутке необходимо рандомить числа?" << endl;
-		cin >> a >> b;
-		function_2(A, c, a, b);
-	}
-	if (x == 3) {
-		cout << "Массив:  ";
-		function_3(A);
-	}
-	if (x == 4) {
-		int element = 0;
-		int start = 0;
-		cout << "Индекс какого элемента Вы хотите узнать?" << endl;
-		cin >> element;
-		cout << function_4(A, element, start) << endl;
-		system("pause");
-	}
-	if (x == 5) {
-		int* addArr = new int[N] {0};
-		int i = -1;
-		int a = 0;
-		cout << "Введите массив который необходимо добавить?" << endl;
-		cout << "Введите -1000 когда заходите прекратить пополнение массива" << endl;
-		while (1) {
-			cin >> a;
-			if (a != -1000) {
-				i++;
-				addArr[i] = a;
-			}
-			else break;
-		}
-		int addSize = i + 1;
-		function_5(A, addArr);
-		delete[] addArr;
-		system("pause");
-	}
-	if (x == 6) {
-		int* addArr = new int[N] {0};
-		int i = -1;
-		int a = 0;
-		cout << "Введите массив который необходимо добавить" << endl;
-		cout << "Введите -1000 когда заходите прекратить пополнение массива" << endl;
-		while (1) {
-			cin >> a;
-			if (a != -1000) {
-				i++;
-				addArr[i] = a;
-			}
-			else break;
-		}
-		int addSize = i + 1;
-		for (i = 0; i < addSize; i++) {
-			cout << addArr[i] << "  ";
-		}
-		system("pause");
-		function_6(A, addArr);
-	}
-	if (x == 7) {
-		int  element = 0;
-		int index = 0;
-		cout << "Какой элемент Вы хотите добавить?" << endl;
-		cin >> element;
-		cout << "Какой индекс должен иметь элемент?" << endl;
-		cin >> index;
-		function_7(A, element, index);
-	}
-	if (x == 8) {
-		int startIndex = 0;
-		int count = 0;
-		cout << "Начиная с какого индекса надо удалить элементы?" << endl;
-		cin >> startIndex;
-		cout << "Сколько элементов надо удалить?" << endl;
-		cin >> count;
-		cout << function_8(A, startIndex, count) << endl;
-	}
-	if (x == 9) {
-		int* B = new int[N] {0};
-		int size_B = 0;
-		int i = -1;
-		int b = 0;
-		cout << "Введите подпоследовательность, которую надо найти?" << endl;
-		cout << "Введите -1000 когда заходите прекратить ввод" << endl;
-		while (1) {
-			cin >> b;
-			if (b != -1000) {
-				i++;
-				B[i] = b;
-			}
-			else break;
-		}
-		size_B = i + 1;
-		cout << function_9(A, B) << endl;
-		system("pause");
-	}
+	return result;
 }
 
 int main()
 {
+	srand(time(NULL));
 	setlocale(LC_ALL, "Russian");
-	int x = 1;
 	int n = 0;
-	int* A = initArray(N);
-	while (x != 0) {
-		system("cls");
-		meny();
-		cin >> x;
-		*(A - 1) = sizeof(A);
-		check(A, x);
+	double x;
+	string str;
+
+
+	cout << "n точность вычисления" << endl;
+	getline(cin, str, '\n');
+	n = stringToInt(str);
+
+	cout << "x точка" << endl;
+	getline(cin, str, '\n');
+	x = stringToDouble(str);
+
+	if (Valid_x(x) == 1 || Valid_n(n) == 1)
+	{
+		cout << "Ошибка ввода данных" << endl;
+		return -1;
 	}
 
-	deleteArray(A);
+	double sum = ch(x, n);
+	cout << fixed << setprecision(n) << sum << endl;
 	return 0;
 }
